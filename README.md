@@ -42,7 +42,7 @@ Built with [Tauri v2](https://tauri.app/), React, and Rust.
 
 ## About
 
-Bellecour is a macOS menu bar application that turns your voice into text in seconds. It sits unobtrusively as a small floating pill on your screen, ready to record whenever you hold the global shortcut. Once you release the key, it sends the audio to OpenAI's Whisper API for transcription and displays the result in a compact overlay card. From there, you can refine the text with AI-powered transformations — fix grammar, change tone, extract action items, or translate — then paste the final result into any application with a single keystroke.
+Bellecour is a macOS menu bar application that turns your voice into text in seconds. It sits unobtrusively as a small floating pill on your screen, ready to record whenever you hold the global shortcut. Once you release the key, it sends the audio to OpenAI's GPT-4o-mini Transcribe API for transcription and displays the result in a compact overlay card. From there, you can refine the text with AI-powered transformations — fix grammar, change tone, extract action items, or translate — then paste the final result into any application with a single keystroke.
 
 The app is designed for speed: the entire workflow from speaking to pasting takes just a few seconds and never requires switching windows or opening a separate app.
 
@@ -66,7 +66,7 @@ While recording, a real-time audio waveform visualizes your microphone input. Th
 
 ### Transcription & Auto-Paste
 
-When you release the shortcut, the recorded audio (WebM/Opus format) is sent to OpenAI's **Whisper** API for speech-to-text transcription. Once the transcription is ready, you can:
+When you release the shortcut, the recorded audio (WebM/Opus format) is sent to OpenAI's **GPT-4o-mini Transcribe** API for speech-to-text transcription. Once the transcription is ready, you can:
 
 - **Press Enter** to automatically paste the text into the currently focused application. Bellecour writes the text to the system clipboard and simulates a `Cmd+V` keystroke via macOS CoreGraphics events.
 - **Press Escape** to discard the transcription.
@@ -124,7 +124,7 @@ The idle pill displays the current transcription language (e.g., "EN", "IT", "FR
 - **Right-click** to open a compact language picker
 - **Press L** while idle to cycle to the next language
 
-Supported transcription languages: English, Italian, French, Spanish, German, Portuguese, Japanese, and Chinese. The selected language is sent as a hint to the Whisper API for improved accuracy.
+Supported transcription languages: English, Italian, French, Spanish, German, Portuguese, Japanese, and Chinese. The selected language is sent as a hint to the transcription API for improved accuracy.
 
 ### Audio Playback
 
@@ -134,7 +134,7 @@ After transcription, an audio player lets you replay the original recording to v
 
 The settings window (accessible from the tray menu) provides:
 
-- **OpenAI API Key** — required for Whisper and GPT-4o-mini. Stored securely in the macOS Keychain.
+- **OpenAI API Key** — required for GPT-4o-mini Transcribe and GPT-4o-mini. Stored securely in the macOS Keychain.
 - **Transcription Language** — default language for speech recognition, with an expanded list of 12 languages.
 - **Audio Input** — select a specific microphone or use the system default.
 - **Transformations Editor** — full CRUD interface for managing text transformations.
@@ -154,7 +154,7 @@ Bellecour tracks every API call locally and displays a usage dashboard in Settin
 - **Total audio minutes** processed
 - **Recent history** — the last 20 API calls with timestamps and individual costs
 
-Costs are calculated using OpenAI pricing: Whisper at $0.006/minute, GPT-4o-mini at $0.15/1M input tokens and $0.60/1M output tokens. Usage data can be cleared at any time.
+Costs are calculated using OpenAI pricing: GPT-4o-mini Transcribe at $0.003/minute, GPT-4o-mini at $0.15/1M input tokens and $0.60/1M output tokens. Usage data can be cleared at any time.
 
 ### Secure API Key Storage
 
@@ -203,7 +203,7 @@ Both windows load the same React app, which routes based on `window.location.pat
 - **Rust** (stable toolchain) — install via [rustup](https://rustup.rs/)
 - **Node.js** (v18+) and **pnpm** (v10+)
 - **Xcode Command Line Tools** — `xcode-select --install`
-- An **OpenAI API key** with access to the Whisper and Chat Completions APIs
+- An **OpenAI API key** with access to the Audio Transcriptions and Chat Completions APIs
 
 ### Installation
 
@@ -273,7 +273,7 @@ belcour/
 │   └── src/
 │       ├── main.rs             # Entry point
 │       ├── lib.rs              # App setup: tray, shortcuts, commands
-│       ├── transcribe.rs       # Whisper API integration
+│       ├── transcribe.rs       # GPT-4o-mini Transcribe API integration
 │       ├── enrich.rs           # GPT-4o-mini text transformation
 │       ├── paste.rs            # Clipboard + CoreGraphics Cmd+V simulation
 │       ├── config.rs           # Keychain storage + settings access
