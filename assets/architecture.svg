@@ -77,7 +77,7 @@
       <rect width="160" height="32" rx="8" fill="#18181b" stroke="rgba(249,115,22,0.2)" stroke-width="1"/>
       <rect x="8" y="8" width="6" height="6" rx="1.5" fill="url(#orangeG)" opacity="0.8"/>
       <text x="20" y="14" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#fdba74">transcribe.rs</text>
-      <text x="20" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="7" fill="#71717a">Whisper API client</text>
+      <text x="20" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="7" fill="#71717a">GPT-4o-mini Transcribe client</text>
     </g>
 
     <g transform="translate(0, 62)" filter="url(#archSh)">
@@ -124,7 +124,7 @@
     <g transform="translate(0, 24)" filter="url(#archSh)">
       <rect width="120" height="42" rx="8" fill="#18181b" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
       <rect x="8" y="8" width="6" height="6" rx="1.5" fill="url(#greenG)" opacity="0.8"/>
-      <text x="20" y="15" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#6ee7b7">Whisper</text>
+      <text x="20" y="15" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#6ee7b7">4o-mini Transcribe</text>
       <text x="12" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="7" fill="#71717a">Speech-to-text</text>
     </g>
 

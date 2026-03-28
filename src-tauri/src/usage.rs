@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
 // Pricing (USD) — updated March 2026
-const WHISPER_PER_MINUTE: f64 = 0.006;
+const TRANSCRIBE_PER_MINUTE: f64 = 0.003;
 const GPT4O_MINI_INPUT_PER_1M: f64 = 0.15;
 const GPT4O_MINI_OUTPUT_PER_1M: f64 = 0.60;
 
@@ -47,9 +47,9 @@ fn save_log(app: &AppHandle, log: &UsageLog) {
     }
 }
 
-/// Log a Whisper transcription call
+/// Log a transcription call
 pub fn log_transcription(app: &AppHandle, audio_seconds: f64) {
-    let cost = (audio_seconds / 60.0) * WHISPER_PER_MINUTE;
+    let cost = (audio_seconds / 60.0) * TRANSCRIBE_PER_MINUTE;
     let entry = UsageEntry {
         timestamp: chrono_now(),
         kind: "transcription".into(),

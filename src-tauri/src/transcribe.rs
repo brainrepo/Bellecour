@@ -18,7 +18,7 @@ pub async fn transcribe_audio(
 
     let mut form = multipart::Form::new()
         .part("file", file_part)
-        .text("model", "whisper-1");
+        .text("model", "gpt-4o-mini-transcribe");
 
     if !language.is_empty() {
         form = form.text("language", language);
@@ -36,7 +36,7 @@ pub async fn transcribe_audio(
     if !response.status().is_success() {
         let status = response.status();
         let body = response.text().await.unwrap_or_default();
-        return Err(format!("Whisper API error ({}): {}", status, body));
+        return Err(format!("Transcription API error ({}): {}", status, body));
     }
 
     let json: serde_json::Value = response

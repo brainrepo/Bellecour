@@ -25,6 +25,12 @@ pub fn run() {
             config::save_api_key,
             config::load_api_key,
         ])
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                let _ = window.hide();
+            }
+        })
         .setup(|app| {
             // --- Migrate API key from plaintext store to Keychain ---
             {
