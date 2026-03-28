@@ -1,6 +1,6 @@
 {
   "identifier": "default",
-  "description": "Default capabilities for Belcour",
+  "description": "Default capabilities for Bellecour",
   "windows": ["overlay", "settings"],
   "permissions": [
     "core:default",

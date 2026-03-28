@@ -2,6 +2,7 @@ mod config;
 mod enrich;
 mod paste;
 mod transcribe;
+pub mod usage;
 
 use tauri::{
     menu::{MenuBuilder, MenuItemBuilder},
@@ -19,12 +20,30 @@ pub fn run() {
             transcribe::transcribe_audio,
             paste::paste_text,
             enrich::enrich_text,
+            usage::get_usage_stats,
+            usage::clear_usage,
+            config::save_api_key,
+            config::load_api_key,
         ])
         .setup(|app| {
+            // --- Migrate API key from plaintext store to Keychain ---
+            {
+                use tauri_plugin_store::StoreExt;
+                if let Ok(store) = app.store("settings.json") {
+                    if let Some(key) = store.get("api_key").and_then(|v| v.as_str().map(|s| s.to_string())) {
+                        if !key.is_empty() {
+                            let _ = config::set_api_key(&key);
+                            store.delete("api_key");
+                            let _ = store.save();
+                        }
+                    }
+                }
+            }
+
             // --- System Tray ---
             let settings_item =
                 MenuItemBuilder::with_id("settings", "Settings...").build(app)?;
-            let quit_item = MenuItemBuilder::with_id("quit", "Quit Belcour").build(app)?;
+            let quit_item = MenuItemBuilder::with_id("quit", "Quit Bellecour").build(app)?;
             let menu = MenuBuilder::new(app)
                 .item(&settings_item)
                 .separator()
@@ -35,7 +54,7 @@ pub fn run() {
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .show_menu_on_left_click(true)
-                .tooltip("Belcour — Voice to Text")
+                .tooltip("Bellecour — Voice to Text")
                 .on_menu_event(|app, event| match event.id().as_ref() {
                     "settings" => {
                         if let Some(win) = app.get_webview_window("settings") {
@@ -60,11 +79,6 @@ pub fn run() {
                     match event.state {
                         ShortcutState::Pressed => {
                             let _ = app.emit("start-recording", ());
-                            // Show overlay window
-                            if let Some(win) = app.get_webview_window("overlay") {
-                                let _ = win.show();
-                                let _ = win.set_focus();
-                            }
                         }
                         ShortcutState::Released => {
                             let _ = app.emit("stop-recording", ());
@@ -80,5 +94,5 @@ pub fn run() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running Belcour");
+        .expect("error while running Bellecour");
 }

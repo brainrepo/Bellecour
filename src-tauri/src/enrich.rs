@@ -1,4 +1,4 @@
-use crate::config;
+use crate::{config, usage};
 use tauri::AppHandle;
 
 fn system_prompt(mode: &str) -> &'static str {
@@ -45,15 +45,18 @@ Only return the translated text, nothing else.",
 pub async fn enrich_text(
     text: String,
     mode: String,
+    prompt: Option<String>,
     app_handle: AppHandle,
 ) -> Result<String, String> {
     let api_key = config::get_api_key(&app_handle)?;
-    let prompt = system_prompt(&mode);
+    let effective_prompt = prompt
+        .filter(|p| !p.is_empty())
+        .unwrap_or_else(|| system_prompt(&mode).to_string());
 
     let body = serde_json::json!({
         "model": "gpt-4o-mini",
         "messages": [
-            { "role": "system", "content": prompt },
+            { "role": "system", "content": effective_prompt },
             { "role": "user", "content": text }
         ],
         "temperature": 0.7
@@ -78,6 +81,11 @@ pub async fn enrich_text(
         .json()
         .await
         .map_err(|e| format!("Parse error: {}", e))?;
+
+    // Log token usage
+    let input_tokens = json["usage"]["prompt_tokens"].as_u64().unwrap_or(0);
+    let output_tokens = json["usage"]["completion_tokens"].as_u64().unwrap_or(0);
+    usage::log_enrichment(&app_handle, &mode, input_tokens, output_tokens);
 
     json["choices"][0]["message"]["content"]
         .as_str()

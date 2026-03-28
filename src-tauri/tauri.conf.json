@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicedl/tauri-settings/main/schema.json",
-  "productName": "Belcour",
+  "productName": "Bellecour",
   "version": "0.1.0",
-  "identifier": "com.belcour.voice",
+  "identifier": "dev.brainrepo.bellecour",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -17,25 +17,25 @@
     "windows": [
       {
         "label": "overlay",
-        "title": "Belcour",
+        "title": "Bellecour",
         "url": "/",
-        "width": 300,
-        "height": 80,
+        "width": 64,
+        "height": 34,
         "decorations": false,
         "transparent": true,
         "alwaysOnTop": true,
-        "visible": false,
+        "visible": true,
         "resizable": false,
         "skipTaskbar": true,
-        "x": 600,
+        "x": 800,
         "y": 40
       },
       {
         "label": "settings",
-        "title": "Belcour Settings",
+        "title": "Bellecour Settings",
         "url": "/settings.html",
         "width": 480,
-        "height": 560,
+        "height": 720,
         "visible": false,
         "decorations": true,
         "center": true,

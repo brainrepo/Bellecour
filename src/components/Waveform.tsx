@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
-const BAR_COUNT = 24;
+const BAR_COUNT = 28;
 const BAR_WIDTH = 2;
 const BAR_GAP = 1.5;
 const MIN_HEIGHT = 2;
 const CANVAS_WIDTH = BAR_COUNT * (BAR_WIDTH + BAR_GAP);
-const CANVAS_HEIGHT = 28;
+const CANVAS_HEIGHT = 32;
 
 interface WaveformProps {
   analyser: AnalyserNode | null;
@@ -14,6 +14,7 @@ interface WaveformProps {
 function Waveform({ analyser }: WaveformProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
+  const prevRef = useRef<Float32Array>(new Float32Array(BAR_COUNT));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,36 +28,31 @@ function Waveform({ analyser }: WaveformProps) {
       analyser!.getByteFrequencyData(dataArray);
 
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
       const centerY = CANVAS_HEIGHT / 2;
 
       for (let i = 0; i < BAR_COUNT; i++) {
-        // Map bar index to frequency bin (skip the very lowest bins)
         const binIndex = Math.min(i + 1, dataArray.length - 1);
-        const value = dataArray[binIndex] / 255;
+        const raw = dataArray[binIndex] / 255;
 
-        const barHeight = Math.max(MIN_HEIGHT, value * (CANVAS_HEIGHT - 4));
+        // Smooth with previous frame for organic feel
+        const smoothed = prevRef.current[i] * 0.3 + raw * 0.7;
+        prevRef.current[i] = smoothed;
+
+        const barHeight = Math.max(MIN_HEIGHT, smoothed * (CANVAS_HEIGHT - 4));
         const x = i * (BAR_WIDTH + BAR_GAP);
         const y = centerY - barHeight / 2;
 
-        // Gradient from indigo to white based on amplitude
-        const r = 99 + Math.round(value * 80);
-        const g = 102 + Math.round(value * 80);
-        const b = 241;
-        const alpha = 0.5 + value * 0.5;
-
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        // Soft rose glow — brighter bars at higher amplitude
+        const alpha = 0.25 + smoothed * 0.65;
+        ctx.fillStyle = `rgba(253, 164, 175, ${alpha})`;
         ctx.beginPath();
-        ctx.roundRect(x, y, BAR_WIDTH, barHeight, 1);
+        ctx.roundRect(x, y, BAR_WIDTH, barHeight, BAR_WIDTH / 2);
         ctx.fill();
       }
     }
 
     draw();
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-    };
+    return () => cancelAnimationFrame(rafRef.current);
   }, [analyser]);
 
   return (

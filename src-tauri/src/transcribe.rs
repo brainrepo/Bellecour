@@ -1,10 +1,11 @@
-use crate::config;
+use crate::{config, usage};
 use reqwest::multipart;
 use tauri::AppHandle;
 
 #[tauri::command]
 pub async fn transcribe_audio(
     audio_data: Vec<u8>,
+    audio_duration: f64,
     app_handle: AppHandle,
 ) -> Result<String, String> {
     let api_key = config::get_api_key(&app_handle)?;
@@ -42,6 +43,9 @@ pub async fn transcribe_audio(
         .json()
         .await
         .map_err(|e| format!("Failed to parse response: {}", e))?;
+
+    // Log usage
+    usage::log_transcription(&app_handle, audio_duration);
 
     json["text"]
         .as_str()

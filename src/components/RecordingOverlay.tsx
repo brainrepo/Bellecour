@@ -3,32 +3,87 @@ import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { LogicalSize } from "@tauri-apps/api/dpi";
 import { invoke } from "@tauri-apps/api/core";
+import { load } from "@tauri-apps/plugin-store";
+import {
+  SpellCheck,
+  Briefcase,
+  Smile,
+  Scissors,
+  ListChecks,
+  Type,
+  Pen,
+  Zap,
+  Star,
+  Heart,
+  Globe,
+  MessageSquare,
+  FileText,
+  Coffee,
+  Hash,
+  AtSign,
+  BookOpen,
+  Wand2,
+  Layers,
+  Target,
+  X,
+  ClipboardPaste,
+  Loader2,
+  Mic,
+  AlertCircle,
+} from "lucide-react";
 import { useAudioRecorder, RecordingResult } from "../hooks/useAudioRecorder";
+import { Transformation, DEFAULT_TRANSFORMATIONS } from "../transformations";
 import Waveform from "./Waveform";
 import "./RecordingOverlay.css";
 
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+  spellcheck: SpellCheck,
+  briefcase: Briefcase,
+  smile: Smile,
+  scissors: Scissors,
+  "list-checks": ListChecks,
+  type: Type,
+  pen: Pen,
+  zap: Zap,
+  star: Star,
+  heart: Heart,
+  globe: Globe,
+  "message-square": MessageSquare,
+  "file-text": FileText,
+  coffee: Coffee,
+  hash: Hash,
+  "at-sign": AtSign,
+  book: BookOpen,
+  wand: Wand2,
+  layers: Layers,
+  target: Target,
+};
+
+const IDLE_SIZE = { w: 64, h: 34 };
 const PILL_SIZE = { w: 300, h: 80 };
-const RESULT_SIZE = { w: 420, h: 530 };
+const RESULT_SIZE = { w: 400, h: 500 };
 
-const ENRICH_MODES = [
-  { id: "grammar", label: "Fix Grammar", icon: "Aa" },
-  { id: "formal", label: "Formal", icon: "F" },
-  { id: "funnier", label: "Funnier", icon: ")" },
-  { id: "concise", label: "Concise", icon: "C" },
-  { id: "actions", label: "Actions", icon: "A" },
+const ICON_SIZE = 14;
+
+const LANGUAGES = [
+  { code: "en", label: "EN" },
+  { code: "it", label: "IT" },
+  { code: "fr", label: "FR" },
+  { code: "es", label: "ES" },
+  { code: "de", label: "DE" },
+  { code: "pt", label: "PT" },
+  { code: "ja", label: "JA" },
+  { code: "zh", label: "ZH" },
 ];
 
-const TRANSLATE_MODES = [
-  { id: "translate_it", label: "Italiano", flag: "IT" },
-  { id: "translate_en", label: "English", flag: "EN" },
-  { id: "translate_fr", label: "Français", flag: "FR" },
-];
 
 function RecordingOverlay() {
   const { state, startRecording, stopRecording, reset, analyserRef } =
     useAudioRecorder();
   const [seconds, setSeconds] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [lang, setLang] = useState("en");
+  const [langOpen, setLangOpen] = useState(false);
   const [result, setResult] = useState<{
     text: string;
     originalText: string;
@@ -36,10 +91,9 @@ function RecordingOverlay() {
   } | null>(null);
   const [enriching, setEnriching] = useState<string | null>(null);
   const [activeMode, setActiveMode] = useState<string | null>(null);
+  const [transformations, setTransformations] = useState<Transformation[]>(DEFAULT_TRANSFORMATIONS);
 
-  // Manual phase tracking independent of React render cycle
   const phaseRef = useRef<"idle" | "recording" | "processing" | "result">("idle");
-
   const startRef = useRef(startRecording);
   const stopRef = useRef(stopRecording);
   const resetRef = useRef(reset);
@@ -49,121 +103,150 @@ function RecordingOverlay() {
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Register event listeners ONCE
+  useEffect(() => {
+    load("settings.json", { defaults: {}, autoSave: false }).then((store) => {
+      store.get<string>("language").then((saved) => {
+        if (saved) setLang(saved);
+      });
+      store.get<Transformation[]>("transformations").then((saved) => {
+        if (saved && saved.length > 0) setTransformations(saved);
+      });
+    });
+  }, []);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      const phase = phaseRef.current;
+      if (phase === "result") {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 9 && !e.metaKey && !e.ctrlKey) {
+          const t = transformations[num - 1];
+          if (t) { e.preventDefault(); handleEnrich(t.id); }
+          return;
+        }
+        if (e.key === "Enter") { e.preventDefault(); handlePaste(); return; }
+        if (e.key === "Escape") { e.preventDefault(); handleDiscard(); return; }
+        if (e.key === "0" || e.key === "Backspace") {
+          e.preventDefault();
+          if (activeMode) {
+            setResult((r) => (r ? { ...r, text: r.originalText } : r));
+            setActiveMode(null);
+          }
+          return;
+        }
+        return;
+      }
+      if (phase === "idle" && langOpen) {
+        const idx = parseInt(e.key) - 1;
+        if (idx >= 0 && idx < LANGUAGES.length) { e.preventDefault(); selectLang(LANGUAGES[idx].code); return; }
+        if (e.key === "Escape") { e.preventDefault(); setLangOpen(false); goIdle(); return; }
+        return;
+      }
+      if (phase === "idle" && !langOpen) {
+        if (e.key === "l" || e.key === "L") { e.preventDefault(); cycleLang(); return; }
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  });
+
+  async function goIdle() {
+    await getCurrentWindow().setSize(new LogicalSize(IDLE_SIZE.w, IDLE_SIZE.h));
+  }
+
   useEffect(() => {
     let unlistenStart: (() => void) | undefined;
     let unlistenStop: (() => void) | undefined;
-
     const setup = async () => {
       unlistenStart = await listen("start-recording", async () => {
         if (phaseRef.current !== "idle") return;
         phaseRef.current = "recording";
         const win = getCurrentWindow();
         try {
-          setError(null);
-          setResult(null);
-          setSeconds(0);
-          setActiveMode(null);
-          setEnriching(null);
+          setError(null); setResult(null); setSeconds(0);
+          setActiveMode(null); setEnriching(null); setLangOpen(false);
           await win.setSize(new LogicalSize(PILL_SIZE.w, PILL_SIZE.h));
           await startRef.current();
         } catch (err) {
           phaseRef.current = "idle";
           setError(err instanceof Error ? err.message : "Failed to start");
-          setTimeout(() => {
-            win.hide();
-            resetRef.current();
-            setError(null);
-          }, 2000);
+          setTimeout(() => { resetRef.current(); setError(null); goIdle(); }, 2000);
         }
       });
-
       unlistenStop = await listen("stop-recording", async () => {
         if (phaseRef.current !== "recording") return;
         phaseRef.current = "processing";
         const win = getCurrentWindow();
-
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = null;
-        }
-
+        if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
         try {
           const recording: RecordingResult = await stopRef.current();
-
           const text = await invoke<string>("transcribe_audio", {
             audioData: recording.audioBytes,
+            audioDuration: recording.duration,
           });
-
           const trimmed = text.trim();
-          setResult({
-            text: trimmed,
-            originalText: trimmed,
-            audioUrl: recording.audioBlobUrl,
-          });
+          setResult({ text: trimmed, originalText: trimmed, audioUrl: recording.audioBlobUrl });
           phaseRef.current = "result";
           await win.setSize(new LogicalSize(RESULT_SIZE.w, RESULT_SIZE.h));
         } catch (err) {
           console.error("Transcription error:", err);
           setError(err instanceof Error ? err.message : "Transcription failed");
           phaseRef.current = "idle";
-          setTimeout(async () => {
-            setError(null);
-            await win.hide();
-            resetRef.current();
-          }, 2000);
+          setTimeout(async () => { setError(null); resetRef.current(); goIdle(); }, 2000);
         }
       });
     };
-
     setup();
-    return () => {
-      unlistenStart?.();
-      unlistenStop?.();
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => { unlistenStart?.(); unlistenStop?.(); if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 
-  // Elapsed timer
   useEffect(() => {
-    if (state === "recording") {
-      timerRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
-    }
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
+    if (state === "recording") timerRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; } };
   }, [state]);
 
-  async function handleEnrich(mode: string) {
-    if (!result?.text || enriching) return;
+  async function cycleLang() {
+    const idx = LANGUAGES.findIndex((l) => l.code === lang);
+    const next = LANGUAGES[(idx + 1) % LANGUAGES.length];
+    setLang(next.code);
+    const store = await load("settings.json", { defaults: {}, autoSave: false });
+    await store.set("language", next.code);
+    await store.save();
+  }
 
+  async function selectLang(code: string) {
+    setLang(code); setLangOpen(false);
+    const store = await load("settings.json", { defaults: {}, autoSave: false });
+    await store.set("language", code);
+    await store.save();
+    await getCurrentWindow().setSize(new LogicalSize(IDLE_SIZE.w, IDLE_SIZE.h));
+  }
+
+  async function handleEnrich(mode: string) {
+    if (!result?.text || enriching || !mode) return;
     if (activeMode === mode) {
       setResult((r) => (r ? { ...r, text: r.originalText } : r));
       setActiveMode(null);
       return;
     }
-
     setEnriching(mode);
     try {
+      const t = transformations.find((tr) => tr.id === mode);
       const enriched = await invoke<string>("enrich_text", {
         text: result.originalText,
         mode,
+        prompt: t?.prompt,
       });
       setResult((r) => (r ? { ...r, text: enriched.trim() } : r));
       setActiveMode(mode);
-    } catch (err) {
-      console.error("Enrich error:", err);
-    }
+    } catch (err) { console.error("Enrich error:", err); }
     setEnriching(null);
   }
 
   async function handlePaste() {
     if (!result?.text) return;
-    const win = getCurrentWindow();
-    await win.hide();
+    await goIdle();
     await new Promise((r) => setTimeout(r, 150));
     await invoke("paste_text", { text: result.text });
     handleDiscard();
@@ -171,15 +254,11 @@ function RecordingOverlay() {
 
   function handleDiscard() {
     if (result?.audioUrl) URL.revokeObjectURL(result.audioUrl);
-    setResult(null);
-    setActiveMode(null);
-    setEnriching(null);
-    reset();
-    phaseRef.current = "idle";
-    getCurrentWindow().hide();
+    setResult(null); setActiveMode(null); setEnriching(null);
+    reset(); phaseRef.current = "idle"; goIdle();
   }
 
-  // Result view
+  // ── Result view ──
   if (result) {
     return (
       <div className="result-container">
@@ -189,60 +268,51 @@ function RecordingOverlay() {
             <span className="result-title">Transcription</span>
             {activeMode && (
               <span className="active-badge">
-                {[...ENRICH_MODES, ...TRANSLATE_MODES].find(
-                  (m) => m.id === activeMode
-                )?.label}
+                {transformations.find((m) => m.id === activeMode)?.label}
               </span>
             )}
           </div>
 
           <audio className="audio-player" src={result.audioUrl} controls />
 
-          <div className="result-text">
-            {result.text || (
-              <span className="empty-text">No speech detected</span>
-            )}
-          </div>
+          <textarea
+            className="result-text"
+            value={result.text}
+            onChange={(e) => setResult((r) => r ? { ...r, text: e.target.value } : r)}
+            placeholder="No speech detected"
+            spellCheck={false}
+          />
 
-          <div className="enrich-bar">
-            {ENRICH_MODES.map((mode) => (
-              <button
-                key={mode.id}
-                className={`enrich-btn ${activeMode === mode.id ? "active" : ""} ${enriching === mode.id ? "loading" : ""}`}
-                onClick={() => handleEnrich(mode.id)}
-                disabled={!!enriching || !result.text}
-                title={mode.label}
-              >
-                <span className="enrich-icon">{mode.icon}</span>
-                <span className="enrich-label">{mode.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="translate-bar">
-            {TRANSLATE_MODES.map((mode) => (
-              <button
-                key={mode.id}
-                className={`translate-btn ${activeMode === mode.id ? "active" : ""} ${enriching === mode.id ? "loading" : ""}`}
-                onClick={() => handleEnrich(mode.id)}
-                disabled={!!enriching || !result.text}
-              >
-                <span className="translate-flag">{mode.flag}</span>
-                <span className="translate-label">{mode.label}</span>
-              </button>
-            ))}
+          <div className="toolbar-row">
+            {transformations.map((t, i) => {
+              const IconComp = ICON_MAP[t.icon];
+              return (
+                <button
+                  key={t.id}
+                  className={`tool-btn ${activeMode === t.id ? "active" : ""} ${enriching === t.id ? "loading" : ""}`}
+                  onClick={() => handleEnrich(t.id)}
+                  disabled={!!enriching || !result.text}
+                  title={t.label}
+                >
+                  {enriching === t.id
+                    ? <Loader2 size={ICON_SIZE} className="spin" />
+                    : IconComp
+                      ? <IconComp size={ICON_SIZE} />
+                      : <span className="tool-flag">{t.icon}</span>}
+                  {i < 9 && <span className="tool-hint">{i + 1}</span>}
+                </button>
+              );
+            })}
           </div>
 
           <div className="result-actions">
-            <button className="btn btn-secondary" onClick={handleDiscard}>
-              Discard
+            <button className="btn btn-secondary" onClick={handleDiscard} title="Discard (Esc)">
+              <X size={14} />
+              <span>Discard</span>
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={handlePaste}
-              disabled={!result.text || !!enriching}
-            >
-              Paste
+            <button className="btn btn-primary" onClick={handlePaste} disabled={!result.text || !!enriching} title="Paste (Enter)">
+              <ClipboardPaste size={14} />
+              <span>Paste</span>
             </button>
           </div>
         </div>
@@ -250,30 +320,52 @@ function RecordingOverlay() {
     );
   }
 
-  // Recording / processing / error pill
-  return (
-    <div className="overlay-container">
-      <div className={`overlay-pill ${state}`}>
-        {state === "recording" && (
-          <>
-            <div className="recording-dot" />
-            <Waveform analyser={analyserRef.current} />
-            <span className="elapsed">{formatTime(seconds)}</span>
-          </>
-        )}
-        {state === "processing" && (
-          <>
-            <div className="spinner" />
-            <span className="label">Transcribing...</span>
-          </>
-        )}
-        {state === "idle" && error && (
-          <>
-            <div className="error-dot" />
-            <span className="label error-text">{error}</span>
-          </>
-        )}
+  // ── Recording / processing pill ──
+  if (state === "recording" || state === "processing" || error) {
+    return (
+      <div className="overlay-container">
+        <div className={`overlay-pill ${state}`}>
+          {state === "recording" && (
+            <>
+              <div className="recording-dot" />
+              <Waveform analyser={analyserRef.current} />
+              <span className="elapsed">{formatTime(seconds)}</span>
+            </>
+          )}
+          {state === "processing" && (
+            <>
+              <Loader2 size={14} className="spin" style={{ color: "var(--spinner-head)" }} />
+              <span className="label">Transcribing...</span>
+            </>
+          )}
+          {error && (
+            <>
+              <AlertCircle size={14} style={{ color: "var(--yellow)" }} />
+              <span className="label error-text">{error}</span>
+            </>
+          )}
+        </div>
       </div>
+    );
+  }
+
+  // ── Idle mini pill ──
+  return (
+    <div className="idle-container">
+      {langOpen ? (
+        <div className="lang-picker">
+          {LANGUAGES.map((l) => (
+            <button key={l.code} className={`lang-option ${l.code === lang ? "active" : ""}`} onClick={() => selectLang(l.code)}>
+              {l.label}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <button className="idle-pill" onClick={cycleLang} onContextMenu={(e) => { e.preventDefault(); setLangOpen(true); getCurrentWindow().setSize(new LogicalSize(200, 42)); }}>
+          <Mic size={10} />
+          <span className="idle-lang">{LANGUAGES.find((l) => l.code === lang)?.label}</span>
+        </button>
+      )}
     </div>
   );
 }

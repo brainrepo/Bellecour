@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { load } from "@tauri-apps/plugin-store";
 
 export type RecorderState = "idle" | "recording" | "processing" | "result";
 
@@ -18,9 +19,23 @@ export function useAudioRecorder() {
   const startTimeRef = useRef(0);
 
   const startRecording = useCallback(async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true },
-    });
+    // Read selected audio device from settings
+    let deviceId: string | undefined;
+    try {
+      const store = await load("settings.json", { defaults: {}, autoSave: false });
+      const saved = await store.get<string>("audio_device");
+      if (saved) deviceId = saved;
+    } catch { /* use default */ }
+
+    const constraints: MediaStreamConstraints = {
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+      },
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
     streamRef.current = stream;
     chunksRef.current = [];
     startTimeRef.current = Date.now();

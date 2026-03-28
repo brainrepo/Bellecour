@@ -1,10 +1,10 @@
 [package]
-name = "belcour"
+name = "bellecour"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "belcour_lib"
+name = "bellecour_lib"
 crate-type = ["lib", "cdylib", "staticlib"]
 
 [build-dependencies]
@@ -20,3 +20,4 @@ tokio = { version = "1", features = ["full"] }
 arboard = "3"
 core-graphics = "0.23"
 reqwest = { version = "0.12", features = ["multipart", "json"] }
+security-framework = "3"

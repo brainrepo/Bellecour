@@ -1,5 +1,5 @@
 {
-  "name": "belcour",
+  "name": "bellecour",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,6 +16,7 @@
     "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/plugin-global-shortcut": "^2.3.1",
     "@tauri-apps/plugin-store": "^2.4.2",
+    "lucide-react": "^1.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
