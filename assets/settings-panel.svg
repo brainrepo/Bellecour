@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 380 440"
+   fill="none"
+   version="1.1"
+   id="svg32"
+   sodipodi:docname="settings-panel.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.1409008"
+     inkscape:cx="403.62844"
+     inkscape:cy="314.22539"
+     inkscape:window-width="1616"
+     inkscape:window-height="936"
+     inkscape:window-x="20"
+     inkscape:window-y="82"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g15" />
+  <defs
+     id="defs4">
+    <linearGradient
+       id="roseSave"
+       x1="0%"
+       y1="0%"
+       x2="100%"
+       y2="100%">
+      <stop
+         offset="0%"
+         stop-color="#f43f5e"
+         id="stop1" />
+      <stop
+         offset="100%"
+         stop-color="#e11d48"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       id="logoBg"
+       x1="0%"
+       y1="0%"
+       x2="100%"
+       y2="100%">
+      <stop
+         offset="0%"
+         stop-color="#f43f5e"
+         id="stop3" />
+      <stop
+         offset="100%"
+         stop-color="#e11d48"
+         id="stop4" />
+    </linearGradient>
+    <filter
+       id="setShadow">
+      <feDropShadow
+         dx="0"
+         dy="4"
+         stdDeviation="8"
+         flood-color="#000"
+         flood-opacity="0.4" />
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect
+     width="380"
+     height="440"
+     rx="14"
+     fill="#09090b"
+     id="rect4" />
+  <rect
+     width="380"
+     height="440"
+     rx="14"
+     fill="none"
+     stroke="#27272a"
+     stroke-width="1"
+     id="rect5" />
+  <!-- Header -->
+  <g
+     transform="translate(28, 28)"
+     id="g8">
+    <rect
+       width="36"
+       height="36"
+       rx="9"
+       fill="url(#logoBg)"
+       id="rect6" />
+    <text
+       x="18"
+       y="25"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="18"
+       font-weight="700"
+       fill="white"
+       text-anchor="middle"
+       id="text6">B</text>
+    <text
+       x="48"
+       y="16"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="18"
+       font-weight="600"
+       fill="#fafafa"
+       letter-spacing="-0.02em"
+       id="text7">Bellecour</text>
+    <text
+       x="48"
+       y="32"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="12"
+       fill="#71717a"
+       id="text8">Voice to Text</text>
+  </g>
+  <!-- Configuration Section -->
+  <g
+     transform="translate(28, 84)"
+     id="g15">
+    <text
+       x="0"
+       y="0"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="11"
+       font-weight="600"
+       fill="#71717a"
+       letter-spacing="0.08em"
+       id="text9">CONFIGURATION</text>
+    <!-- API Key field -->
+    <text
+       x="0"
+       y="24"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="12"
+       font-weight="500"
+       fill="#a1a1aa"
+       id="text10">OpenAI API Key</text>
+    <rect
+       x="0"
+       y="30"
+       width="260"
+       height="32"
+       rx="7"
+       fill="#18181b"
+       stroke="#27272a"
+       stroke-width="1"
+       id="rect10" />
+    <text
+       x="12"
+       y="50"
+       font-family="system-ui, '-apple-system', sans-serif"
+       font-size="12px"
+       fill="#3f3f46"
+       id="text11">********************************</text>
+    <rect
+       x="268"
+       y="30"
+       width="56"
+       height="32"
+       rx="7"
+       fill="#27272a"
+       stroke="#3f3f46"
+       stroke-width="1"
+       id="rect11" />
+    <text
+       x="296"
+       y="50"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="11"
+       font-weight="500"
+       fill="#a1a1aa"
+       text-anchor="middle"
+       id="text12">Show</text>
+    <!-- Keychain hint -->
+    <g
+       transform="translate(0, 68)"
+       id="g13">
+      <!-- Lock icon -->
+      <rect
+         x="0"
+         y="1"
+         width="7"
+         height="6"
+         rx="1"
+         fill="none"
+         stroke="#52525b"
+         stroke-width="0.8"
+         id="rect12" />
+      <path
+         d="M1.5 1 V-1 C1.5 -3 5.5 -3 5.5 -1 V1"
+         fill="none"
+         stroke="#52525b"
+         stroke-width="0.8"
+         id="path12" />
+      <text
+         x="11"
+         y="6"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="9"
+         fill="#52525b"
+         id="text13">Stored securely in macOS Keychain</text>
+    </g>
+    <!-- Language field -->
+    <text
+       x="0"
+       y="90"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="12"
+       font-weight="500"
+       fill="#a1a1aa"
+       id="text14">Transcription Language</text>
+    <rect
+       x="0"
+       y="96"
+       width="324"
+       height="32"
+       rx="7"
+       fill="#18181b"
+       stroke="#27272a"
+       stroke-width="1"
+       id="rect14" />
+    <text
+       x="12"
+       y="116"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="12"
+       fill="#fafafa"
+       id="text15">English</text>
+    <!-- Chevron -->
+    <path
+       d="M304 108 L308 114 L312 108"
+       stroke="#71717a"
+       stroke-width="1.3"
+       fill="none"
+       id="path15" />
+  </g>
+  <!-- Shortcut Section -->
+  <g
+     transform="translate(28, 220)"
+     id="g21">
+    <text
+       x="0"
+       y="0"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="11"
+       font-weight="600"
+       fill="#71717a"
+       letter-spacing="0.08em"
+       id="text16">SHORTCUT</text>
+    <rect
+       x="0"
+       y="12"
+       width="324"
+       height="36"
+       rx="9"
+       fill="#18181b"
+       stroke="#27272a"
+       stroke-width="1"
+       id="rect16" />
+    <text
+       x="14"
+       y="34"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="13"
+       font-weight="500"
+       fill="#fafafa"
+       id="text17">Record</text>
+    <!-- Kbd keys -->
+    <g
+       transform="translate(220, 18)"
+       id="g20">
+      <rect
+         width="26"
+         height="22"
+         rx="5"
+         fill="#27272a"
+         stroke="#3f3f46"
+         stroke-width="1"
+         id="rect17" />
+      <text
+         x="13"
+         y="15"
+         font-family="system-ui, '-apple-system', sans-serif"
+         font-size="12px"
+         fill="#d4d4d8"
+         text-anchor="middle"
+         id="text18">ctr</text>
+      <rect
+         x="30"
+         width="26"
+         height="22"
+         rx="5"
+         fill="#27272a"
+         stroke="#3f3f46"
+         stroke-width="1"
+         id="rect18" />
+      <text
+         x="43"
+         y="15"
+         font-family="system-ui, '-apple-system', sans-serif"
+         font-size="12px"
+         fill="#d4d4d8"
+         text-anchor="middle"
+         id="text19">cmd</text>
+      <rect
+         x="60"
+         width="26"
+         height="22"
+         rx="5"
+         fill="#27272a"
+         stroke="#3f3f46"
+         stroke-width="1"
+         id="rect19" />
+      <text
+         x="73"
+         y="15"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="12"
+         fill="#d4d4d8"
+         text-anchor="middle"
+         id="text20">B</text>
+    </g>
+    <text
+       x="0"
+       y="60"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="10"
+       fill="#52525b"
+       id="text21">Hold to record, release to transcribe and paste.</text>
+  </g>
+  <!-- Usage Section -->
+  <g
+     transform="translate(28, 300)"
+     id="g31">
+    <text
+       x="0"
+       y="0"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="11"
+       font-weight="600"
+       fill="#71717a"
+       letter-spacing="0.08em"
+       id="text22">API USAGE</text>
+    <!-- Usage grid -->
+    <g
+       transform="translate(0, 12)"
+       id="g30">
+      <!-- Total -->
+      <rect
+         width="76"
+         height="52"
+         rx="9"
+         fill="#18181b"
+         stroke="rgba(244,63,94,0.2)"
+         stroke-width="1"
+         id="rect22" />
+      <text
+         x="38"
+         y="24"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="14"
+         font-weight="700"
+         fill="#f43f5e"
+         text-anchor="middle"
+         id="text23">$0.042</text>
+      <text
+         x="38"
+         y="40"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="8"
+         font-weight="500"
+         fill="#52525b"
+         text-anchor="middle"
+         letter-spacing="0.05em"
+         id="text24">TOTAL</text>
+      <!-- Transcription -->
+      <rect
+         x="82"
+         width="76"
+         height="52"
+         rx="9"
+         fill="#18181b"
+         stroke="#27272a"
+         stroke-width="1"
+         id="rect24" />
+      <!-- Mic icon -->
+      <g
+         transform="translate(108, 12)"
+         id="g25">
+        <rect
+           x="0"
+           y="0"
+           width="5"
+           height="7"
+           rx="2.5"
+           fill="none"
+           stroke="#a1a1aa"
+           stroke-width="0.8"
+           id="rect25" />
+        <path
+           d="M-1 6 C-1 9 6 9 6 6"
+           stroke="#a1a1aa"
+           stroke-width="0.8"
+           fill="none"
+           id="path25" />
+      </g>
+      <text
+         x="120"
+         y="34"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="12"
+         font-weight="700"
+         fill="#fafafa"
+         text-anchor="middle"
+         id="text25">$0.036</text>
+      <text
+         x="120"
+         y="44"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="8"
+         font-weight="500"
+         fill="#52525b"
+         text-anchor="middle"
+         id="text26">6.0 MIN</text>
+      <!-- Enrich -->
+      <rect
+         x="164"
+         width="76"
+         height="52"
+         rx="9"
+         fill="#18181b"
+         stroke="#27272a"
+         stroke-width="1"
+         id="rect26" />
+      <!-- Sparkle icon -->
+      <g
+         transform="translate(195, 12)"
+         id="g26">
+        <path
+           d="M3 0 L3.5 2.5 L6 3 L3.5 3.5 L3 6 L2.5 3.5 L0 3 L2.5 2.5 Z"
+           fill="#a1a1aa"
+           id="path26" />
+      </g>
+      <text
+         x="202"
+         y="34"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="12"
+         font-weight="700"
+         fill="#fafafa"
+         text-anchor="middle"
+         id="text27">$0.004</text>
+      <text
+         x="202"
+         y="44"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="8"
+         font-weight="500"
+         fill="#52525b"
+         text-anchor="middle"
+         id="text28">ENRICH</text>
+      <!-- Translate -->
+      <rect
+         x="246"
+         width="78"
+         height="52"
+         rx="9"
+         fill="#18181b"
+         stroke="#27272a"
+         stroke-width="1"
+         id="rect28" />
+      <!-- Globe icon -->
+      <circle
+         cx="285"
+         cy="16"
+         r="4"
+         fill="none"
+         stroke="#a1a1aa"
+         stroke-width="0.8"
+         id="circle28" />
+      <line
+         x1="281"
+         y1="16"
+         x2="289"
+         y2="16"
+         stroke="#a1a1aa"
+         stroke-width="0.6"
+         id="line28" />
+      <ellipse
+         cx="285"
+         cy="16"
+         rx="2"
+         ry="4"
+         fill="none"
+         stroke="#a1a1aa"
+         stroke-width="0.6"
+         id="ellipse28" />
+      <text
+         x="285"
+         y="34"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="12"
+         font-weight="700"
+         fill="#fafafa"
+         text-anchor="middle"
+         id="text29">$0.002</text>
+      <text
+         x="285"
+         y="44"
+         font-family="system-ui, -apple-system, sans-serif"
+         font-size="8"
+         font-weight="500"
+         fill="#52525b"
+         text-anchor="middle"
+         id="text30">TRANSLATE</text>
+    </g>
+  </g>
+  <!-- Save button -->
+  <g
+     transform="translate(28, 392)"
+     id="g32">
+    <rect
+       width="324"
+       height="36"
+       rx="9"
+       fill="url(#roseSave)"
+       id="rect31" />
+    <text
+       x="162"
+       y="23"
+       font-family="system-ui, -apple-system, sans-serif"
+       font-size="13"
+       font-weight="600"
+       fill="white"
+       text-anchor="middle"
+       id="text31">Save Settings</text>
+  </g>
+</svg>

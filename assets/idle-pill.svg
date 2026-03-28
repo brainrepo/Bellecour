@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 140" fill="none">
+  <defs>
+    <filter id="pillShadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+    <filter id="dotGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="280" height="140" rx="14" fill="#0c0c0e"/>
+  <rect width="280" height="140" rx="14" fill="none" stroke="#ffffff08" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="140" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#3f3f46" text-anchor="middle" letter-spacing="0.1em">IDLE STATE</text>
+
+  <!-- Idle Pill (enlarged) -->
+  <g transform="translate(82, 40)" filter="url(#pillShadow)">
+    <rect width="116" height="56" rx="28" fill="rgba(26,26,30,0.95)" stroke="#ffffff12" stroke-width="1"/>
+
+    <!-- Mic icon -->
+    <g transform="translate(26, 14)">
+      <rect x="4" y="0" width="10" height="16" rx="5" fill="none" stroke="#fda4af" stroke-width="1.5" opacity="0.8"/>
+      <path d="M2 13 C2 20 16 20 16 13" stroke="#fda4af" stroke-width="1.5" fill="none" opacity="0.8"/>
+      <line x1="9" y1="20" x2="9" y2="25" stroke="#fda4af" stroke-width="1.5" opacity="0.8"/>
+      <line x1="5" y1="25" x2="13" y2="25" stroke="#fda4af" stroke-width="1.5" opacity="0.8"/>
+    </g>
+
+    <!-- Language label -->
+    <text x="72" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#ffffff73" letter-spacing="0.06em">EN</text>
+  </g>
+
+  <!-- Annotations -->
+  <g transform="translate(0, 110)">
+    <text x="82" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#52525b">Click: cycle language</text>
+    <text x="82" y="14" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#52525b">Right-click: language picker</text>
+    <text x="82" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="8" fill="#52525b">Press L: next language</text>
+  </g>
+</svg>

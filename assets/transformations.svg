@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" fill="none">
+  <defs>
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+    <filter id="cardSh">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="300" rx="14" fill="#0c0c0e"/>
+  <rect width="680" height="300" rx="14" fill="none" stroke="#ffffff08" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="340" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#3f3f46" text-anchor="middle" letter-spacing="0.1em">TEXT TRANSFORMATIONS</text>
+
+  <!-- Original text -->
+  <g transform="translate(24, 46)" filter="url(#cardSh)">
+    <rect width="200" height="100" rx="10" fill="rgba(18,18,22,0.95)" stroke="#ffffff10" stroke-width="1"/>
+    <text x="14" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="700" fill="#ffffff2e" letter-spacing="0.08em">ORIGINAL</text>
+    <text x="14" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#ffffffaa">so basically i think we</text>
+    <text x="14" y="54" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#ffffffaa">should probaly move the</text>
+    <text x="14" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#ffffffaa">deadline up and get this</text>
+    <text x="14" y="82" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#ffffffaa">done by friday i guess</text>
+  </g>
+
+  <!-- Arrows fanning out -->
+  <g stroke="#3f3f46" stroke-width="1.2" fill="none">
+    <path d="M234 72 L275 56"/>
+    <path d="M234 88 L275 88"/>
+    <path d="M234 96 L275 112"/>
+    <path d="M234 106 L275 146"/>
+    <path d="M234 118 L275 196"/>
+  </g>
+  <!-- Arrowheads -->
+  <g fill="#3f3f46">
+    <polygon points="275,51 280,56 275,61" transform="rotate(-15 277 56)"/>
+    <polygon points="275,83 280,88 275,93"/>
+    <polygon points="275,107 280,112 275,117" transform="rotate(12 277 112)"/>
+    <polygon points="275,141 280,146 275,151" transform="rotate(22 277 146)"/>
+    <polygon points="275,191 280,196 275,201" transform="rotate(32 277 196)"/>
+  </g>
+
+  <!-- Grammar card -->
+  <g transform="translate(290, 40)" filter="url(#cardSh)">
+    <rect width="365" height="40" rx="8" fill="rgba(18,18,22,0.95)" stroke="rgba(244,63,94,0.2)" stroke-width="1"/>
+    <!-- Number badge -->
+    <rect x="8" y="8" width="24" height="24" rx="6" fill="rgba(244,63,94,0.1)"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#fda4af" text-anchor="middle">1</text>
+    <!-- Icon + label -->
+    <text x="44" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#fda4af">Grammar</text>
+    <!-- Result text -->
+    <text x="44" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#ffffff73">I think we should probably move the deadline up...</text>
+  </g>
+
+  <!-- Formal card -->
+  <g transform="translate(290, 86)" filter="url(#cardSh)">
+    <rect width="365" height="40" rx="8" fill="rgba(18,18,22,0.95)" stroke="#ffffff10" stroke-width="1"/>
+    <rect x="8" y="8" width="24" height="24" rx="6" fill="#ffffff08"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff40" text-anchor="middle">2</text>
+    <text x="44" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#ffffff73">Formal</text>
+    <text x="44" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#ffffff50">I recommend advancing the deadline to ensure...</text>
+  </g>
+
+  <!-- Concise card -->
+  <g transform="translate(290, 132)" filter="url(#cardSh)">
+    <rect width="365" height="40" rx="8" fill="rgba(18,18,22,0.95)" stroke="#ffffff10" stroke-width="1"/>
+    <rect x="8" y="8" width="24" height="24" rx="6" fill="#ffffff08"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff40" text-anchor="middle">4</text>
+    <text x="44" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#ffffff73">Concise</text>
+    <text x="44" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#ffffff50">Move deadline up. Done by Friday.</text>
+  </g>
+
+  <!-- Actions card -->
+  <g transform="translate(290, 178)" filter="url(#cardSh)">
+    <rect width="365" height="40" rx="8" fill="rgba(18,18,22,0.95)" stroke="#ffffff10" stroke-width="1"/>
+    <rect x="8" y="8" width="24" height="24" rx="6" fill="#ffffff08"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#ffffff40" text-anchor="middle">5</text>
+    <text x="44" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#ffffff73">Actions</text>
+    <text x="44" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#ffffff50">&#8226; Move the deadline up &#8226; Complete by Friday</text>
+  </g>
+
+  <!-- Translate card -->
+  <g transform="translate(290, 224)" filter="url(#cardSh)">
+    <rect width="365" height="40" rx="8" fill="rgba(18,18,22,0.95)" stroke="rgba(52,211,153,0.2)" stroke-width="1"/>
+    <rect x="8" y="8" width="24" height="24" rx="6" fill="rgba(52,211,153,0.08)"/>
+    <text x="20" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#6ee7b7" text-anchor="middle">6</text>
+    <text x="44" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#6ee7b7">Italiano</text>
+    <text x="44" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#ffffff50">Penso che dovremmo anticipare la scadenza...</text>
+  </g>
+
+  <!-- Footer hint -->
+  <text x="340" y="286" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#3f3f46" text-anchor="middle">Press 1–9 to apply · Press 0 to revert · Fully customizable in Settings</text>
+</svg>
