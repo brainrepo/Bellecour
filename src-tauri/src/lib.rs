@@ -1,6 +1,8 @@
 mod config;
 mod enrich;
+mod focus;
 mod paste;
+mod shortcuts;
 mod transcribe;
 pub mod usage;
 
@@ -24,6 +26,8 @@ pub fn run() {
             usage::clear_usage,
             config::save_api_key,
             config::load_api_key,
+            shortcuts::register_result_shortcuts,
+            shortcuts::unregister_result_shortcuts,
         ])
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
@@ -84,6 +88,7 @@ pub fn run() {
                 |app, _shortcut, event| {
                     match event.state {
                         ShortcutState::Pressed => {
+                            focus::capture_frontmost_app();
                             let _ = app.emit("start-recording", ());
                         }
                         ShortcutState::Released => {

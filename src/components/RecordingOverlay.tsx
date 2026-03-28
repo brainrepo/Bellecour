@@ -164,6 +164,7 @@ function RecordingOverlay() {
         phaseRef.current = "recording";
         const win = getCurrentWindow();
         try {
+          await invoke("unregister_result_shortcuts").catch(() => {});
           setError(null); setResult(null); setSeconds(0);
           setActiveMode(null); setEnriching(null); setLangOpen(false);
           await win.setSize(new LogicalSize(PILL_SIZE.w, PILL_SIZE.h));
@@ -189,6 +190,7 @@ function RecordingOverlay() {
           setResult({ text: trimmed, originalText: trimmed, audioUrl: recording.audioBlobUrl });
           phaseRef.current = "result";
           await win.setSize(new LogicalSize(RESULT_SIZE.w, RESULT_SIZE.h));
+          await invoke("register_result_shortcuts").catch(() => {});
         } catch (err) {
           console.error("Transcription error:", err);
           setError(err instanceof Error ? err.message : "Transcription failed");
@@ -200,6 +202,33 @@ function RecordingOverlay() {
     setup();
     return () => { unlistenStart?.(); unlistenStop?.(); if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
+
+  // Listen for global shortcut actions (work without overlay focus)
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    const setup = async () => {
+      unlisten = await listen<{ action: string }>("shortcut-action", (event) => {
+        if (phaseRef.current !== "result") return;
+        const { action } = event.payload;
+        if (action === "paste") { handlePaste(); return; }
+        if (action === "discard") { handleDiscard(); return; }
+        if (action === "revert") {
+          if (activeMode) {
+            setResult((r) => (r ? { ...r, text: r.originalText } : r));
+            setActiveMode(null);
+          }
+          return;
+        }
+        if (action.startsWith("enrich:")) {
+          const idx = parseInt(action.split(":")[1]) - 1;
+          const t = transformations[idx];
+          if (t) handleEnrich(t.id);
+        }
+      });
+    };
+    setup();
+    return () => unlisten?.();
+  });
 
   useEffect(() => {
     if (state === "recording") timerRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -245,14 +274,37 @@ function RecordingOverlay() {
   }
 
   async function handlePaste() {
-    if (!result?.text) return;
-    await goIdle();
-    await new Promise((r) => setTimeout(r, 150));
-    await invoke("paste_text", { text: result.text });
-    handleDiscard();
+    if (!result?.text || phaseRef.current !== "result") return;
+    phaseRef.current = "idle";
+    const textToPaste = result.text;
+    await invoke("unregister_result_shortcuts").catch(() => {});
+    // Clean up state
+    if (result?.audioUrl) URL.revokeObjectURL(result.audioUrl);
+    setResult(null); setActiveMode(null); setEnriching(null);
+    reset();
+    // Hide overlay so the target app can receive focus and the paste keystroke
+    const win = getCurrentWindow();
+    await win.setSize(new LogicalSize(IDLE_SIZE.w, IDLE_SIZE.h));
+    await win.hide();
+    try {
+      await invoke("paste_text", { text: textToPaste });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("Paste failed:", msg);
+      setError(msg);
+      await win.setSize(new LogicalSize(PILL_SIZE.w, PILL_SIZE.h));
+      await win.show();
+      setTimeout(() => { setError(null); goIdle(); }, 5000);
+      return;
+    }
+    // Let the paste land before restoring the always-on-top overlay,
+    // otherwise win.show() steals focus via makeKeyAndOrderFront:
+    await new Promise(resolve => setTimeout(resolve, 200));
+    await win.show();
   }
 
-  function handleDiscard() {
+  async function handleDiscard() {
+    await invoke("unregister_result_shortcuts").catch(() => {});
     if (result?.audioUrl) URL.revokeObjectURL(result.audioUrl);
     setResult(null); setActiveMode(null); setEnriching(null);
     reset(); phaseRef.current = "idle"; goIdle();

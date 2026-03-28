@@ -301,6 +301,9 @@ Bellecour requires two macOS permissions:
 1. **Microphone Access** — For audio recording. macOS will prompt automatically on first use.
 2. **Accessibility** — For simulating the `Cmd+V` paste keystroke via CoreGraphics events. Grant this in **System Settings → Privacy & Security → Accessibility**.
 
+> **Troubleshooting Accessibility permission:**
+> If Bellecour reports that it needs Accessibility permission even though it appears enabled, **remove the app from the Accessibility list and re-add it**. Simply toggling the switch off and on may not be enough — macOS can cache stale trust entries, especially after the app has been rebuilt. During development with `cargo tauri dev`, grant Accessibility to your **terminal emulator** (Terminal, iTerm2, Warp, etc.) instead, since the binary runs as a child process of the terminal.
+
 ### Configuration Storage
 
 | Data | Storage Location |
